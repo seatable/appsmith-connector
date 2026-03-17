@@ -14,7 +14,7 @@ public void addSeaTablePlugin(MongoTemplate mongoTemplate) {
     plugin.setUiComponent("UQIDbEditorForm");
     plugin.setResponseType(Plugin.ResponseType.JSON);
     plugin.setIconLocation("https://seatable.com/favicon.svg");
-    plugin.setDocumentationLink("https://developer.seatable.io/");
+    plugin.setDocumentationLink("https://api.seatable.com/");
     plugin.setDefaultInstall(true);
     try {
         mongoTemplate.insert(plugin);

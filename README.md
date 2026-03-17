@@ -1,6 +1,6 @@
 # SeaTable Connector for Appsmith
 
-A native [Appsmith](https://www.appsmith.com/) data source plugin for [SeaTable](https://seatable.io/) — the open-source database platform that's easy like a spreadsheet and powerful like a database.
+A native [Appsmith](https://www.appsmith.com/) data source plugin for [SeaTable](https://seatable.com/) — the open-source database platform that's easy like a spreadsheet and powerful like a database.
 
 ## Features
 
@@ -94,11 +94,12 @@ seaTablePlugin/
 | List Tables | GET | `/api/v2/dtables/{uuid}/metadata/` |
 | SQL Query | POST | `/api/v2/dtables/{uuid}/sql/` |
 
-All endpoints are verified against the [SeaTable OpenAPI specification](https://developer.seatable.io/).
+All endpoints are verified against the [SeaTable OpenAPI specification](https://api.seatable.com/).
 
 ## Related
 
-- [SeaTable API Documentation](https://developer.seatable.io/)
+- [SeaTable API Reference](https://api.seatable.com/)
+- [SeaTable Developer Documentation](https://developer.seatable.com/)
 - [Appsmith Plugin Contribution Guidelines](https://github.com/appsmithorg/appsmith/blob/release/contributions/ServerCodeContributionsGuidelines/PluginCodeContributionsGuidelines.md)
 - [SeaTable ToolJet Connector](https://github.com/seatable/tooljet-connector)
 

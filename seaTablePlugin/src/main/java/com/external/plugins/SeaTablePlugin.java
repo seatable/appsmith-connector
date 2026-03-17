@@ -71,7 +71,7 @@ import static java.lang.Boolean.TRUE;
  *    {dtable_server}/api/v2/dtables/{dtable_uuid}/...
  *    with header: Authorization: Token {access_token}
  *
- * API reference: https://developer.seatable.io/
+ * API reference: https://api.seatable.com/
  */
 public class SeaTablePlugin extends BasePlugin {
 
