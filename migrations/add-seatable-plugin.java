@@ -9,7 +9,7 @@
 public void addSeaTablePlugin(MongoTemplate mongoTemplate) {
     Plugin plugin = new Plugin();
     plugin.setName("SeaTable");
-    plugin.setType(PluginType.API);
+    plugin.setType(PluginType.SAAS);
     plugin.setPackageName("seatable-plugin");
     plugin.setUiComponent("UQIDbEditorForm");
     plugin.setResponseType(Plugin.ResponseType.JSON);
