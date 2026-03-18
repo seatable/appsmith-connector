@@ -431,11 +431,6 @@ public class SeaTablePlugin extends BasePlugin {
                 String basePath, String accessToken, Map<String, Object> formData) {
 
             String tableName = getDataValueSafelyFromFormData(formData, TABLE_NAME, STRING_TYPE, "");
-            if (StringUtils.isBlank(tableName)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_TABLE_NAME_ERROR_MSG));
-            }
 
             StringBuilder pathBuilder = new StringBuilder("/rows/");
             pathBuilder.append("?table_name=").append(PluginUtils.urlEncode(tableName));
@@ -478,17 +473,6 @@ public class SeaTablePlugin extends BasePlugin {
             String tableName = getDataValueSafelyFromFormData(formData, TABLE_NAME, STRING_TYPE, "");
             String rowId = getDataValueSafelyFromFormData(formData, ROW_ID, STRING_TYPE, "");
 
-            if (StringUtils.isBlank(tableName)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_TABLE_NAME_ERROR_MSG));
-            }
-            if (StringUtils.isBlank(rowId)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_ROW_ID_ERROR_MSG));
-            }
-
             String path = "/rows/" + PluginUtils.urlEncode(rowId)
                     + "/?table_name=" + PluginUtils.urlEncode(tableName)
                     + "&convert_keys=true";
@@ -506,12 +490,6 @@ public class SeaTablePlugin extends BasePlugin {
 
             String tableName = getDataValueSafelyFromFormData(formData, TABLE_NAME, STRING_TYPE, "");
             String body = getDataValueSafelyFromFormData(formData, BODY, STRING_TYPE, "");
-
-            if (StringUtils.isBlank(tableName)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_TABLE_NAME_ERROR_MSG));
-            }
 
             String requestBody;
             try {
@@ -543,17 +521,6 @@ public class SeaTablePlugin extends BasePlugin {
             String tableName = getDataValueSafelyFromFormData(formData, TABLE_NAME, STRING_TYPE, "");
             String rowId = getDataValueSafelyFromFormData(formData, ROW_ID, STRING_TYPE, "");
             String body = getDataValueSafelyFromFormData(formData, BODY, STRING_TYPE, "");
-
-            if (StringUtils.isBlank(tableName)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_TABLE_NAME_ERROR_MSG));
-            }
-            if (StringUtils.isBlank(rowId)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_ROW_ID_ERROR_MSG));
-            }
 
             String requestBody;
             try {
@@ -591,17 +558,6 @@ public class SeaTablePlugin extends BasePlugin {
             String tableName = getDataValueSafelyFromFormData(formData, TABLE_NAME, STRING_TYPE, "");
             String rowId = getDataValueSafelyFromFormData(formData, ROW_ID, STRING_TYPE, "");
 
-            if (StringUtils.isBlank(tableName)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_TABLE_NAME_ERROR_MSG));
-            }
-            if (StringUtils.isBlank(rowId)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_ROW_ID_ERROR_MSG));
-            }
-
             String requestBody;
             try {
                 ObjectNode wrapper = objectMapper.createObjectNode();
@@ -638,11 +594,6 @@ public class SeaTablePlugin extends BasePlugin {
                 String basePath, String accessToken, Map<String, Object> formData) {
 
             String sql = getDataValueSafelyFromFormData(formData, SQL, STRING_TYPE, "");
-            if (StringUtils.isBlank(sql)) {
-                return Mono.error(new AppsmithPluginException(
-                        AppsmithPluginError.PLUGIN_EXECUTE_ARGUMENT_ERROR,
-                        SeaTableErrorMessages.MISSING_SQL_ERROR_MSG));
-            }
 
             String requestBody;
             try {
@@ -732,20 +683,14 @@ public class SeaTablePlugin extends BasePlugin {
                 Void connection, DatasourceConfiguration datasourceConfiguration) {
 
             return fetchAccessToken(datasourceConfiguration)
-                    .flatMap(tokenResponse -> {
-                        WebClient client = WebClientUtils.builder()
-                                .exchangeStrategies(EXCHANGE_STRATEGIES)
-                                .build();
-
-                        return client
-                                .get()
-                                .uri(URI.create(tokenResponse.basePath() + "/metadata/"))
-                                .header("Authorization", "Token " + tokenResponse.accessToken())
-                                .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                                .retrieve()
-                                .bodyToMono(byte[].class)
-                                .timeout(REQUEST_TIMEOUT);
-                    })
+                    .flatMap(tokenResponse -> buildRequest(
+                                    tokenResponse.basePath(),
+                                    tokenResponse.accessToken(),
+                                    HttpMethod.GET,
+                                    "/metadata/")
+                            .retrieve()
+                            .bodyToMono(byte[].class)
+                            .timeout(REQUEST_TIMEOUT))
                     .map(responseBytes -> {
                         DatasourceStructure structure = new DatasourceStructure();
                         List<DatasourceStructure.Table> tables = new ArrayList<>();
